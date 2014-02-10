@@ -16,8 +16,6 @@ var DediWorker = (function() {
         , current = max
         , interval;
 
-    console.log("foo");
-
     function operation() {
         interval = setInterval(function() {
             /*
@@ -27,8 +25,6 @@ var DediWorker = (function() {
                 Hence I perform a couple thousand loops,
                 then allow for the operation to be paused.
              */
-            console.log('wertyuiop');
-            console.time("Countdown")
             var loopsLeft = 1500;
 
             while(loopsLeft -= 1) {
@@ -52,8 +48,6 @@ var DediWorker = (function() {
                         /*
                          Close the WebWorker ourselves.
                          */
-
-                        console.log("complete");
                         self.close();
                     } else {
                         postMessage({
@@ -70,7 +64,6 @@ var DediWorker = (function() {
                  */
                 current -= 1;
             }
-            console.timeEnd("Countdown");
         /*
             A delay of 0ms essentially means,
             "Whenever you're free, do this"
@@ -79,16 +72,15 @@ var DediWorker = (function() {
     }
 
     addEventListener('message', function(e) {
-        e = e.data;
-        console.log(e.command, e.data);
+        var data = e.data;
 
-        if(!e.command) {
+        if(!data.command) {
             console.log("No command supplied.");
             return false;
         }
 
-        var cmd = DediWorker[e.command];
-        return cmd ? cmd(e.data) : null;
+        var cmd = DediWorker[data.command];
+        return cmd ? cmd(data.data) : null;
     });
 
     /*
