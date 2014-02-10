@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>WebWorkers -Demos</title>
+    <title>WebWorkers - Demos</title>
     <style>
         div {
             display: inline-block;
             width:30%;
             float:left;
+        }
+
+        #workerControls a {
+            border-radius: 5px;
+            border: 1px solid black;
+        }
+
+        a#terminate {
+            width: 50%;
+            display: block;
+            border: 2px solid red;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -17,6 +29,7 @@
     <a href="javascript:sendCommand('pause');">Pause</a>
     <a href="javascript:sendCommand('resume');">Resume</a>
     <a href="javascript:sendCommand('reset');">Reset</a>
+    <a id="terminate" href="javascript:sendCommand('terminate')">Terminate (KILL)</a>
 </div>
 <div id="main">
     <h2>Main thread:</h2>

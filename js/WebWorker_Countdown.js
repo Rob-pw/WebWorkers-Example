@@ -3,21 +3,25 @@
  */
 
 /*
-    Worker object.
+    Worker object, prevents accidental pollution of global namespace with variables,
+    limits global variables to one (DediWorker),
+    encapsulates private variables and functions,
+    provides a public interface.
  */
-var DediWorker = (function() {
+var DediWorker = (function () {
+    "use strict";
     /*
         max: the number we will start counting down from;
         current: the number we are currently on;
         interval: the interval ID of the asynchronous function.
      */
     var max = 1e6,
-        step = 0.1 * max
-        , current = max
-        , interval;
+        step = 0.1 * max,
+        current = max,
+        interval;
 
     function operation() {
-        interval = setInterval(function() {
+        interval = setInterval(function () {
             /*
                 It is considerably faster to loop internally,
                 rather than using setInterval.
@@ -27,19 +31,19 @@ var DediWorker = (function() {
              */
             var loopsLeft = 1500;
 
-            while(loopsLeft -= 1) {
+            while ((loopsLeft -= 1) >= 0) {
 
                 /*
                     Let's feedback every time we hit another 10%,
                     this just lets the user know what's going on.
                  */
-                if(current % step === 0) {
+                if (current % step === 0) {
 
                     /*
                         If the current number is 0,
                         we have reached the end.
                      */
-                    if(current == 0) {
+                    if (current === 0) {
                         postMessage({
                             status : "complete",
                             current : current
@@ -48,7 +52,7 @@ var DediWorker = (function() {
                         /*
                          Close the WebWorker ourselves.
                          */
-                        self.close();
+                        close();
                     } else {
                         postMessage({
                             status : "incomplete",
@@ -71,25 +75,15 @@ var DediWorker = (function() {
         }, 0);
     }
 
-    addEventListener('message', function(e) {
-        var data = e.data;
-
-        if(!data.command) {
-            console.log("No command supplied.");
-            return false;
-        }
-
-        var cmd = DediWorker[data.command];
-        return cmd ? cmd(data.data) : null;
-    });
-
     /*
-        Let's define our public api.
+        Let's define our public interface,
+        these are the only properties visible outside
+        of this object.
      */
     return {
         start : operation,
 
-        pause : function() {
+        pause : function () {
             /*
                 Inform the main thread of where we're up to
              */
@@ -105,10 +99,33 @@ var DediWorker = (function() {
             interval = undefined;
         },
 
-        resume : function() {
-            if(!interval) {
+        resume : function () {
+            if (!interval) {
                 operation();
             }
         }
+    };
+}());
+
+/**
+ * Add an event listener to message,
+ * get the command from the data property,
+ * if such command exists then execute it.
+ */
+addEventListener('message', function (e) {
+    "use strict";
+
+    var data = e.data,
+        cmd;
+
+    if (!data.command) {
+        console.log("No command supplied.");
     }
-})();
+
+    cmd = DediWorker[data.command];
+    if (!cmd) {
+        throw "'" + cmd + "' is not a valid command.";
+    } else {
+        cmd();
+    }
+});
