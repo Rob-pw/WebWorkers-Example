@@ -19,6 +19,7 @@ function sendCommand(command) {
     if(command === "reset") {
         var onmessage = dediWorker.onmessage;
 
+        dediWorker.terminate();
         dediWorker = new Worker('js/WebWorker_Countdown.js');
         dediWorker.onmessage = onmessage;
 
