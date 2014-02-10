@@ -2,11 +2,31 @@
 <html>
 <head>
     <title>WebWorkers -Demos</title>
+    <style>
+        div {
+            display: inline-block;
+            width:30%;
+            float:left;
+        }
+    </style>
 </head>
 <body>
-<h1>Let's play:</h1>
-<pre>
-</pre>
+<div id="workerControls">
+    <h2>WebWorker Controls</h2>
+    <a href="javascript:sendCommand('start');">Start</a>
+    <a href="javascript:sendCommand('pause');">Pause</a>
+    <a href="javascript:sendCommand('resume');">Resume</a>
+    <a href="javascript:sendCommand('reset');">Reset</a>
+</div>
+<div id="main">
+    <h2>Main thread:</h2>
+    <pre></pre>
+</div>
+
+<div id="webworker">
+    <h2>Feedback from WebWorker:</h2>
+    <pre></pre>
+</div>
 
 <script src="js/Countdown.js"></script>
 </body>

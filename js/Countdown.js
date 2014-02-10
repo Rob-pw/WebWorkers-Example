@@ -8,44 +8,34 @@
     of the script to execute.
  */
 var dediWorker = new Worker('js/WebWorker_Countdown.js')
-    , output = document.getElementsByTagName('pre')[0]
-    , messageCount = 0;
+    , wwOutput = document.querySelector('#webworker pre')
+    , mainOutput = document.querySelector('#main pre');
+
+/**
+ * Sends a command to dediWorker
+ * @param command A string which represents the command
+ */
+function sendCommand(command) {
+    if(command === "reset") {
+        var onmessage = dediWorker.onmessage;
+
+        dediWorker = new Worker('js/WebWorker_Countdown.js');
+        dediWorker.onmessage = onmessage;
+
+        wwOutput.innerText = "** New WebWorker Created **\n";
+        mainOutput.innerText = "** Output Cleared **\n";
+    }
+    mainOutput.innerText += command + "\n";
+    dediWorker.postMessage({
+        command : command
+    });
+}
 
 /*
     Every time a message is received from the Worker,
     execute this function.
  */
 dediWorker.onmessage = function(e) {
-    e = e.data;
-    messageCount += 1;
-
-    /*
-        After 5 messages
-     */
-    if(messageCount === 5) {
-        /*
-            Send a message to the worker,
-            telling it to pause.
-         */
-        dediWorker.postMessage({
-            command : "pause"
-        });
-
-        /*
-            Then after 3.5s, let's resume work.
-         */
-        setTimeout(function() {
-            dediWorker.postMessage({
-               command : "resume"
-            });
-        }, 2500);
-    }
-    output.innerText += "(" + e.status + ") : " + e.current + "\n";
+    var data = e.data;
+    wwOutput.innerText += "(" + data.status + ") : " + data.current + "\n";
 };
-
-/*
-    Worker does nothing until the first message
- */
-dediWorker.postMessage({
-    command : "start"
-});

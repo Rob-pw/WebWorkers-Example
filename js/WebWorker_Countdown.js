@@ -11,7 +11,7 @@ var DediWorker = (function() {
         current: the number we are currently on;
         interval: the interval ID of the asynchronous function.
      */
-    var max = 5e5,
+    var max = 1e6,
         step = 0.1 * max
         , current = max
         , interval;
