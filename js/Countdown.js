@@ -7,7 +7,7 @@
     we need to provide it the location (from the HTML page)
     of the script to execute.
  */
-var dediWorker = new Worker('js/WebWorker::Countdown.js')
+var dediWorker = new Worker('js/WebWorker_Countdown.js')
     , output = document.getElementsByTagName('pre')[0]
     , messageCount = 0;
 
