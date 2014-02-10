@@ -5,7 +5,7 @@
 /*
     Worker object.
  */
-var FzBz = (function() {
+var DediWorker = (function() {
     /*
         max: the number we will start counting down from;
         current: the number we are currently on;
@@ -87,7 +87,7 @@ var FzBz = (function() {
             return false;
         }
 
-        var cmd = FzBz[e.command];
+        var cmd = DediWorker[e.command];
         return cmd ? cmd(e.data) : null;
     });
 

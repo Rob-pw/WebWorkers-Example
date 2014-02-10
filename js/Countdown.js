@@ -13,7 +13,7 @@
         we need to provide it the location (from the HTML page)
         of the script to execute.
      */
-    var fzBzWorker = new Worker('js/WebWorker::FizzBuzz.js')
+    var dediWorker = new Worker('js/WebWorker::Countdown.js')
         , output = document.getElementsByTagName('pre')[0]
         , messageCount = 0;
 
@@ -21,7 +21,7 @@
         Every time a message is received from the Worker,
         execute this function.
      */
-    fzBzWorker.onmessage = function(e) {
+    dediWorker.onmessage = function(e) {
         e = e.data;
         messageCount += 1;
 
@@ -33,7 +33,7 @@
                 Send a message to the worker,
                 telling it to pause.
              */
-            fzBzWorker.postMessage({
+            dediWorker.postMessage({
                 command : "pause"
             });
 
@@ -41,7 +41,7 @@
                 Then after 3.5s, let's resume work.
              */
             setTimeout(function() {
-                fzBzWorker.postMessage({
+                dediWorker.postMessage({
                    command : "resume"
                 });
             }, 2500);
@@ -52,7 +52,7 @@
     /*
         Worker does nothing until the first message
      */
-    fzBzWorker.postMessage({
+    dediWorker.postMessage({
         command : "start"
     });
 })();
