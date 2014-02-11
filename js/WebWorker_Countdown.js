@@ -117,8 +117,6 @@ var DediWorker = (function () {
  * if such command exists then execute it.
  */
 addEventListener('message', function (e) {
-    "use strict";
-
     var data = e.data,
         cmd;
 
